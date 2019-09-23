@@ -1,56 +1,55 @@
 function [ R,FM,P,K,RT] = Evaluation(result,Label)
-%±¾º¯ÊıÖ÷Òª¼ÆËãËÄÖÖ¶ÈÁ¿Ö¸±êRand statistic, Fowlkes and Mallows index, Purity, Normalized Mutual Information
-%ÊäÈë  result:¾ÛÀàËã·¨µÄÀà´Ø,Êı¾İ½á¹¹ÎªcellĞÍ     Label:Êı¾İµÄÕæÊµÀà±êÇ©
-%Êä³ö   R: Rand statistic  FM: Fowlkes and Mallows index  P: Purity
-% NMI: Normalized Mutual Information
-%³õÊ¼»¯¸÷ÖÖÊä³ö²ÎÊıµÄÖµ
+%æœ¬å‡½æ•°ä¸»è¦è®¡ç®—å››ç§åº¦é‡æŒ‡æ ‡Rand statistic, Fowlkes and Mallows index, Purity, Normalized Mutual Information
+%è¾“å…¥  result:èšç±»ç®—æ³•çš„ç±»ç°‡,æ•°æ®ç»“æ„ä¸ºcellå‹     Label:æ•°æ®çš„çœŸå®ç±»æ ‡ç­¾
+%è¾“å‡º   R: Rand statistic  FM: Fowlkes and Mallows index  P: Purity
+%åˆå§‹åŒ–å„ç§è¾“å‡ºå‚æ•°çš„å€¼
 R=0;
 FM=0;
 P=0;
-%¼ÆËãRºÍFMÖ¸±êÖµ
+%è®¡ç®—Rå’ŒFMæŒ‡æ ‡å€¼
 SS=0;
 SD=0;
 DS=0;
 DD=0;
-Re=zeros(size(Label,1),1);%½«resultµÄcellĞÍ×ª»¯³ÉÊı×éĞÍ
+Re=zeros(size(Label,1),1);%å°†resultçš„cellå‹è½¬åŒ–æˆæ•°ç»„å‹
 for i=1:size(result,2)
     Re(result{i},1)=i;
 end
 for i=1:size(Re,1)-1
     for j=i+1:size(Re,1)
-        if Re(i,1)==Re(j,1)%Á½¸ö¶ÔÏó´¦ÓÚÍ¬Ò»¸öÀà´ØÖĞ
-            if Label(i,1)==Label(j,1)%Á½¸ö¶ÔÏóµÄÀà±êÇ©Ò²ÏàµÈ
+        if Re(i,1)==Re(j,1)%ä¸¤ä¸ªå¯¹è±¡å¤„äºåŒä¸€ä¸ªç±»ç°‡ä¸­
+            if Label(i,1)==Label(j,1)%ä¸¤ä¸ªå¯¹è±¡çš„ç±»æ ‡ç­¾ä¹Ÿç›¸ç­‰
                 SS=SS+1;
-            else%Á½¸ö¶ÔÏóµÄÀà±êÇ©²»ÏàµÈ
+            else%ä¸¤ä¸ªå¯¹è±¡çš„ç±»æ ‡ç­¾ä¸ç›¸ç­‰
                 SD=SD+1;
             end
-        else%Á½¸ö¶ÔÏó´¦ÓÚ²»Í¬µÄÀà´ØÖĞ
-            if Label(i,1)==Label(j,1)%Á½¸ö¶ÔÏóµÄÀà±êÇ©ÏàµÈ
+        else%ä¸¤ä¸ªå¯¹è±¡å¤„äºä¸åŒçš„ç±»ç°‡ä¸­
+            if Label(i,1)==Label(j,1)%ä¸¤ä¸ªå¯¹è±¡çš„ç±»æ ‡ç­¾ç›¸ç­‰
                 DS=DS+1;
-            else%Á½¸ö¶ÔÏóµÄÀà±êÇ©Ò²²»ÏàµÈ
+            else%ä¸¤ä¸ªå¯¹è±¡çš„ç±»æ ‡ç­¾ä¹Ÿä¸ç›¸ç­‰
                 DD=DD+1;
             end
         end
     end
 end
-R=(SS+DD)/(SS+DD+SD+DS);%»ñµÃRÖµ
-FM=sqrt(SS*SS/((SS+DS)*(SS+SD)));%»ñµÃFMÖµ
-%½«Label×ª»»³ÉcellĞÍ
-A=(unique(Label))';%AÎª±£´æµÄÊÇÔ­Ñù±¾µÄÀà±êÇ©µÄ¸öÊı
-k=length(unique(Label));%ÕæÊµµÄÀà±êÇ©¸öÊı
+R=(SS+DD)/(SS+DD+SD+DS);%è·å¾—Rå€¼
+FM=sqrt(SS*SS/((SS+DS)*(SS+SD)));%è·å¾—FMå€¼
+%å°†Labelè½¬æ¢æˆcellå‹
+A=(unique(Label))';%Aä¸ºä¿å­˜çš„æ˜¯åŸæ ·æœ¬çš„ç±»æ ‡ç­¾çš„ä¸ªæ•°
+k=length(unique(Label));%çœŸå®çš„ç±»æ ‡ç­¾ä¸ªæ•°
 La=cell(1,k);
 for i=1:k
-    La{i}=(find(Label(:,1)==A(i)))';%ÕÒµ½Í¬Ò»ÀàµÄÑù±¾ĞòºÅ,²¢°ÑĞòºÅ±£´æµ½ÏàÓ¦µÄÊı×éÔªËØÖĞÈ¥
+    La{i}=(find(Label(:,1)==A(i)))';%æ‰¾åˆ°åŒä¸€ç±»çš„æ ·æœ¬åºå·,å¹¶æŠŠåºå·ä¿å­˜åˆ°ç›¸åº”çš„æ•°ç»„å…ƒç´ ä¸­å»
 end
-%¼ÆËãÆÓËØ¶È
+%è®¡ç®—æœ´ç´ åº¦
 for i=1:size(result,2)
     number=0;
-    d=zeros(1,k);%±£´æÃ¿Ò»¸öÀàµÄ½»¼¯ÔªËØµÄ¸öÊı
+    d=zeros(1,k);%ä¿å­˜æ¯ä¸€ä¸ªç±»çš„äº¤é›†å…ƒç´ çš„ä¸ªæ•°
     for j=1:k
         d(j)=length(intersect(result{i},La{j}));
     end
     number=max(number,max(d));
-    P=P+number/size(Label,1);%»ñÈ¡ÆÓËØ¶ÈµÄÖµ
+    P=P+number/size(Label,1);%è·å–æœ´ç´ åº¦çš„å€¼
 end
 K=0.5*(SS/(SS+SD)+SS/(SS+DS));
 RT=2*SS/(2*SS+DS+SD);
